@@ -10,7 +10,10 @@ const port = process.env.PORT || 2626;
 
 // middlewares:
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173'],
+  credentials: true
+}));
 
 // mongodb connection:
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.we6nhxz.mongodb.net/?retryWrites=true&w=majority`;
@@ -28,16 +31,23 @@ async function run() {
   try {
     const jobCollection = client.db('CareerCanvas').collection('jobs');
 
+    app.get('/postedJobs/:email', async(req, res) => {
+      const email = req.params.email;
+      const query = {email: email};
+      const cursor = jobCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
     app.post('/jobs', async(req, res) => {
       const job = req.body;
       const result = await jobCollection.insertOne(job);
       res.send(result);
-    })
+    });
 
   }
    finally {
-    // Ensures that the client will close when you finish/error
-    // await client.close();
+
   }
 }
 run().catch(console.dir);
