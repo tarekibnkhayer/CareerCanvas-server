@@ -35,12 +35,19 @@ async function run() {
 
     app.get('/postedJobs/:email', async(req, res) => {
       const email = req.params.email;
-      console.log(email);
       const query = {email: email};
       const cursor = jobCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
     });
+
+    app.get('/jobs/:categories', async(req, res) => {
+      const categories = req.params.categories;
+      const query = {categories: categories};
+      const cursor = jobCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    })
 
     app.get('/postedJobs/find/:id', async(req, res) => {
       console.log("hello");
