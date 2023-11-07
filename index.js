@@ -29,6 +29,11 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+    await client.connect();
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
     const jobCollection = client.db('CareerCanvas').collection('jobs');
 
     app.get('/postedJobs/:email', async(req, res) => {
@@ -40,9 +45,19 @@ async function run() {
     });
 
     app.get('/postedJobs/:id', async(req, res) => {
+      console.log("hello");
       const id = req.params.id;
+      console.log(id);
       const query = {_id: new ObjectId(id)};
       const result = await jobCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.delete('/postedJobs/:id', async(req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = {_id: new ObjectId(id)};
+      const result = await jobCollection.deleteOne(query);
       res.send(result);
     })
 
