@@ -63,6 +63,14 @@ async function run() {
       const cursor = bidCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
+    });
+
+    app.get('/bidRequests/:email', async(req, res) => {
+      const email = req.params.email;
+      const query = {buyerEmail: email};
+      const cursor = bidCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
     })
 
     app.post('/jobs', async(req, res) => {
