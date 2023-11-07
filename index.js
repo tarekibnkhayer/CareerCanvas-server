@@ -42,7 +42,7 @@ async function run() {
       res.send(result);
     });
 
-    app.get('/postedJobs/update/:id', async(req, res) => {
+    app.get('/postedJobs/find/:id', async(req, res) => {
       console.log("hello");
       const id = req.params.id;
       console.log(id);
@@ -64,6 +64,25 @@ async function run() {
       const result = await jobCollection.insertOne(job);
       res.send(result);
     });
+
+    app.put('/jobs/update/:id', async(req, res) => {
+      const id = req.params.id;
+      const updatedInfo = req.body;
+      const filter = {_id: new ObjectId(id)};
+      const options = {upsert: true};
+      const updatedDoc = {
+        $set: {
+          categories: updatedInfo.categories,
+          minPrice: updatedInfo.minPrice,
+          maxPrice: updatedInfo.maxPrice,
+          title: updatedInfo.title,
+          description: updatedInfo.description,
+          deadline: updatedInfo.deadline
+        }
+      };
+      const result = await jobCollection.updateOne(filter, updatedDoc, options);
+      res.send(result);
+    })
     
   }
    finally {
