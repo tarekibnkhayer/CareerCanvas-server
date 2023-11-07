@@ -29,22 +29,20 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    
 
     const jobCollection = client.db('CareerCanvas').collection('jobs');
 
     app.get('/postedJobs/:email', async(req, res) => {
       const email = req.params.email;
+      console.log(email);
       const query = {email: email};
       const cursor = jobCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
     });
 
-    app.get('/postedJobs/:id', async(req, res) => {
+    app.get('/postedJobs/update/:id', async(req, res) => {
       console.log("hello");
       const id = req.params.id;
       console.log(id);
