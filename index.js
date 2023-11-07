@@ -52,11 +52,18 @@ async function run() {
 
     app.get('/postedJobs/find/:id', async(req, res) => {
       const id = req.params.id;
-      console.log(id);
       const query = {_id: new ObjectId(id)};
       const result = await jobCollection.findOne(query);
       res.send(result);
     });
+
+    app.get('/bids/find/:email', async(req, res) => {
+      const email = req.params.email;
+      const query = {bidderEmail: email};
+      const cursor = bidCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    })
 
     app.post('/jobs', async(req, res) => {
       const job = req.body;
