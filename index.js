@@ -13,7 +13,7 @@ const port = process.env.PORT || 2626;
 // middlewares:
 app.use(express.json());
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://careercanvas-2cb5c.web.app'],
+  origin: ['https://last-development.surge.sh','https://careercanvas-2cb5c.web.app', ],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true
 }));
