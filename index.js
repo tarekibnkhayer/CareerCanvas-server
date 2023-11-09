@@ -219,16 +219,34 @@ async function run() {
       };
       if(req.query.email !== req.user.email){return res.status(403).send({message: 'forbidden'})};
       const id = req.params.id;
-      const {status} = req.body;
+      const statusObj = req.body;
       const filter = {_id: new ObjectId(id)};
       const options = {upsert: true};
       const updatedDoc = {
         $set: {
-          status: status
+          status: statusObj.status,
+          statusNum: statusObj.statusNum
         }
       };
       const result = await bidCollection.updateOne(filter, updatedDoc, options);
       res.send(result);
+    });
+
+    app.get(`/sorting/:email`,  async(req, res) => {
+      const email = req.params.email;
+      console.log(email);
+      let sortObj = {};
+      const sortField = req.query.sortField;
+      const sortOrder = req.query.sortOrder;
+      if(sortField && sortOrder){
+        sortObj[sortField] = sortOrder;
+      };
+      console.log(sortObj);
+      const query = {bidderEmail: email};
+      const cursor = bidCollection.find(query);
+      const result = await cursor.sort(sortObj).toArray();
+      console.log(result);
+      res.send(result); 
     })
     
   }
